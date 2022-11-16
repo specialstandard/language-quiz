@@ -19,6 +19,7 @@ function App() {
     setWordRange(newValue);
   };
 
+  const [toEnglish, setToEnglish] = useState(true)
   const [currentWord, setCurrentWord] = useState()
   const [previousWord, setPreviousWord] = useState()
   const [isCorrect, setIsCorrect] = useState(null)
@@ -33,12 +34,9 @@ function App() {
   const makeOptions = useCallback(() => {
     if(currentWord) {
       const array = Array.from(Array(optionsLength - 1)).map((_) => {
-        const englishWord = getRandom()[1]
-        return (
-          englishWord
-        )
+        return getRandom()[toEnglish ? 1 : 0]
       })
-      array.push(currentWord[1])
+      array.push(currentWord[toEnglish ? 1 : 0])
       shuffle(array)
       setOptions(array)
     }
@@ -56,7 +54,7 @@ function App() {
 
   const guess = (englishWord) => {
 
-    if(englishWord === currentWord[1]) {
+    if(englishWord === currentWord[toEnglish ? 1 : 0]) {
       setIsCorrect(true)
     } else {
       setIsCorrect(false)
@@ -85,7 +83,7 @@ function App() {
     <div style={{fontSize: '40px', display: 'flex', flexDirection: 'column', alignContent: 'justify-content', alignItems: 'center'}}>
 
       <div style={{marginBottom: '20px'}}>
-        <a target="_blank" style={{textDecoration: 'none', color: 'black'}} href={`https://translate.google.com/?sl=auto&tl=en&text=${currentWord[0]}&op=translate`}>{currentWord[0]}</a>
+        <a target="_blank" style={{textDecoration: 'none', color: 'black'}} href={`https://translate.google.com/?sl=auto&tl=en&text=${currentWord[toEnglish ? 0 : 1]}&op=translate`}>{currentWord[toEnglish ? 0 : 1]}</a>
       </div>
 
       <div style={{display: 'flex', flexDirection: 'column', alignContent: 'justify-content', alignItems: 'center'}}>
@@ -104,9 +102,9 @@ function App() {
 
       <div style={{display: 'flex', fontSize: '20px', marginTop: '20px'}}>
         <div style={{marginRight: '12px'}}>
-        <a target="_blank" style={{textDecoration: 'none', color: 'black'}} href={`https://translate.google.com/?sl=auto&tl=en&text=${previousWord?.[0]}&op=translate`}>{previousWord?.[0]}</a>
+        <a target="_blank" style={{textDecoration: 'none', color: 'black'}} href={`https://translate.google.com/?sl=auto&tl=en&text=${previousWord?.[toEnglish ? 0 : 1]}&op=translate`}>{previousWord?.[toEnglish ? 0 : 1]}</a>
         </div>
-        <div>{previousWord?.[1]}</div>
+        <div>{previousWord?.[toEnglish ? 1 : 0]}</div>
       </div>
 
       <div style={{display: 'flex', fontSize: '10px', marginTop: '20px', marginBottom: '20px', alignItems: 'center'}}>
@@ -136,6 +134,11 @@ function App() {
         })}
       </select>
 
+      <div style={{marginTop: '20px', fontSize: '10px'}}>
+        <input type="radio" value={true} name="toEnglish" checked={toEnglish} onChange={(e) => {setToEnglish(true)}}/> To English
+        <input type="radio" value={false} name="toEnglish" checked={!toEnglish} onChange={(e) => {setToEnglish(false)}}/> From English
+      </div>
+    
     </div>
   );
 }
